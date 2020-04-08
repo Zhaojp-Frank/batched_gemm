@@ -541,17 +541,18 @@ int main() {
     cublasHandle_t cublas_handle;
     ErrChk(cudnnCreate(&handle));
     ErrChk(cublasCreate(&cublas_handle));
-
-    // warm up
-    for (int i = 0; i < warmupIters; ++i) {
-        cudnnGoogleNetForward(handle, cublas_handle, N, x, filter, buf,
-                algo_best);
-    }
-
     cudaEvent_t start, stop;
     float elapsedTime = 0;
     ErrChk(cudaEventCreate(&start));
     ErrChk(cudaEventCreate(&stop));
+
+    // warm up
+    printf("batch warmup todo\n");fflush(stdout);
+    for (int i = 0; i < warmupIters; ++i) {
+        cudnnGoogleNetForward(handle, cublas_handle, N, x, filter, buf,
+                algo_best);
+    }
+    printf("cudnn warmp up done\n");fflush(stdout);
     ErrChk(cudaEventRecord(start,0));
 
     for (int i = 0; i < TestIters; ++i) {
@@ -559,6 +560,7 @@ int main() {
                 algo_best);
     }
 
+    printf("cudnn inference done\n");fflush(stdout);
     ErrChk(cudaEventRecord(stop, 0));
     ErrChk(cudaEventSynchronize(stop));
     ErrChk(cudaEventElapsedTime(&elapsedTime, start, stop));
@@ -572,6 +574,7 @@ int main() {
         batchGoogleNetForward(handle, cublas_handle, N, x, filter, buf,
                 algo_best);
     }
+    printf("batch warmup done\n");fflush(stdout);
 
     ErrChk(cudaEventRecord(start,0));
     for (int i = 0; i < TestIters; ++i) {

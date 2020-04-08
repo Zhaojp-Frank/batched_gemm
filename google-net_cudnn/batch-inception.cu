@@ -49,7 +49,7 @@ void batchGoogleNetInception(cudnnHandle_t handle, const int N, const int C,
             N * H * W, K1, K2, K4, K6, C, H, W, x[xIdx], x[xIdx + 3],
             filter[filterIdx], filter[filterIdx + 1], filter[filterIdx + 3],
             filter[filterIdx + 5], output1, x[xIdx + 1], x[xIdx + 2], output4);
-   	KernelErrChk();
+   	KernelErrChk(); //herehere
 
     //relu 1*1
     activation(handle, N, K1, H, W, output1, output1);

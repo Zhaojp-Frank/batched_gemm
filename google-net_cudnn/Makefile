@@ -7,7 +7,7 @@ endif
 GENCODE_FLAGS = -gencode arch=compute_30,code=sm_30 -gencode arch=compute_35,code=sm_35 -gencode arch=compute_37,code=sm_37 -gencode arch=compute_50,code=sm_50 -gencode arch=compute_52,code=sm_52 -gencode arch=compute_60,code=sm_60 -gencode arch=compute_61,code=sm_61 -gencode arch=compute_70,code=sm_70
 
 google-net_cudnn:conv.o main.o activation.o pooling.o lrn.o concat.o dropout.o inception.o batch-inception.o loss.o softmax.o
-	nvcc $^ -o $@ -lcudnn -lcublas ${GENCODE_FLAGS} $(COMMON_FLAGS)
+	nvcc $^ -o $@ -lcudnn -lcublas -lcudart ${GENCODE_FLAGS} $(COMMON_FLAGS)
 
 main.o:main.cpp util.h conv.h activation.h pooling.h lrn.h
 	nvcc -c $< -o $@ ${GENCODE_FLAGS} $(COMMON_FLAGS)

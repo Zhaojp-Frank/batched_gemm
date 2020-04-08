@@ -37,14 +37,18 @@ void cudnnGoogleNetInception(cudnnHandle_t handle, const int N, const int C,
             x[xIdx], filter[filterIdx], buf,
             output1, algo, s[0]);
 
+    ErrChk(cudaDeviceSynchronize());//test
+
     //relu 1*1
     activation(handle, N, K1, H, W, output1, output1, s[0]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //3*3 reduce
     algo = algo_best[(filterIdx+1)*7];
     conv(handle, N, C, H, W, K2, 1, 1, 1, 1, 0, 0, H, W,
             x[xIdx], filter[filterIdx+1], buf,
             x[xIdx + 1], algo, s[1]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //relu 3*3 reduce
     activation(handle, N, K2, H, W, x[xIdx + 1],
@@ -55,6 +59,7 @@ void cudnnGoogleNetInception(cudnnHandle_t handle, const int N, const int C,
     conv(handle, N, C, H, W, K3, 3, 3, 1, 1, 1, 1, H, W,
             x[xIdx + 1], filter[filterIdx+2], buf,
             output2, algo, s[1]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //relu 3*3
     activation(handle, N, K3, H, W, output2, output2, s[1]);
@@ -64,16 +69,19 @@ void cudnnGoogleNetInception(cudnnHandle_t handle, const int N, const int C,
     conv(handle, N, C, H, W, K4, 1, 1, 1, 1, 0, 0, H, W,
             x[xIdx], filter[filterIdx+2], buf,
             x[xIdx + 2], algo, s[2]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //relu 5*5 reduce
     activation(handle, N, K4, H, W, x[xIdx + 2],
             x[xIdx + 2], s[2]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //5*5
     algo = algo_best[(filterIdx+4)*7];
     conv(handle, N, C, H, W, K5, 5, 5, 1, 1, 2, 2, H, W,
             x[xIdx + 2], filter[filterIdx+4], buf,
             output3, algo, s[2]);
+    ErrChk(cudaDeviceSynchronize());//test herehere illegal memory access
 
     //relu 5*5
     activation(handle, N, K5, H, W, output3, output3, s[2]);
@@ -86,6 +94,7 @@ void cudnnGoogleNetInception(cudnnHandle_t handle, const int N, const int C,
     algo = algo_best[(filterIdx+5)*7];
     conv(handle, N, C, H, W, K6, 1, 1, 1, 1, 0, 0, H, W,
             x[xIdx + 3], filter[filterIdx+5], buf, output4, algo, s[3]);
+    ErrChk(cudaDeviceSynchronize());//test
 
     //relu pool proj
     activation(handle, N, K6, H, W, output4, output4, s[3]);

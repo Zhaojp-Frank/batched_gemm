@@ -70,11 +70,11 @@ static inline void Assert(cublasStatus_t code, const char *file, int line){
 		cudaError_t errSync  = cudaGetLastError();\
 		cudaError_t errAsync = cudaDeviceSynchronize();\
 		if (errSync != cudaSuccess) {\
-			  printf("Sync kernel error: %s\n", cudaGetErrorString(errSync));\
+			  printf("Sync kernel error:%s %d %s \n", __FUNCTION__, __LINE__, cudaGetErrorString(errSync));\
 			  exit(EXIT_FAILURE);\
 		}\
 		if (errAsync != cudaSuccess){\
-			printf("Async kernel error: %s\n", cudaGetErrorString(errAsync));\
+			printf("Async kernel error: %s %d %s\n", __FUNCTION__, __LINE__, cudaGetErrorString(errAsync));\
 			exit(EXIT_FAILURE);\
 		}\
 }
